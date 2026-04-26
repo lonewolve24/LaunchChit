@@ -1,6 +1,6 @@
 # LaunchChit (Launchit) — project layout
 
-A FastAPI + PostgreSQL backend for developers to publish apps, gather tester feedback, comments, and upvotes/downvotes. This document lists each file’s role. Implementation lives in those modules; stubs use short comments only.
+A FastAPI + PostgreSQL backend for developers to publish apps, gather tester feedback, comments, and upvotes/downvotes. This document lists each file’s role. Implementation lives in those modules; stubs use short comments only.....
 
 ## Request flow (mental model)
 
