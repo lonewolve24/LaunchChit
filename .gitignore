@@ -68,3 +68,6 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Personal references
+musaajallo/
