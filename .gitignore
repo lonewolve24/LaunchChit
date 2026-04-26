@@ -68,3 +68,12 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# SQLite databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Local dev planning / task files (not part of the codebase)
+tasks/
+guide/
