@@ -1,28 +1,49 @@
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, field_validator, model_validator
 
 
-class RequestOTPInput(BaseModel):
-    name: str
-    email: str | None = None
-    phone: str | None = None
+class SignupInput(BaseModel):
+    username: str
+    email: str
+    password: str
+    confirm_password: str
+
+    @field_validator("username")
+    @classmethod
+    def username_alphanumeric(cls, v: str) -> str:
+        v = v.strip()
+        if not v or not v.replace("_", "").isalnum():
+            raise ValueError("Username must be alphanumeric (and underscores)")
+        if len(v) < 3 or len(v) > 50:
+            raise ValueError("Username must be 3-50 characters")
+        return v
+
+    @field_validator("email")
+    @classmethod
+    def email_valid(cls, v: str) -> str:
+        v = v.strip().lower()
+        if "@" not in v or len(v) < 5:
+            raise ValueError("Invalid email")
+        return v
+
+    @field_validator("password")
+    @classmethod
+    def password_strong(cls, v: str) -> str:
+        if len(v) < 8:
+            raise ValueError("Password must be at least 8 characters")
+        return v
 
     @model_validator(mode="after")
-    def require_email_or_phone(self):
-        if not self.email and not self.phone:
-            raise ValueError("At least one of email or phone is required")
+    def passwords_match(self):
+        if self.password != self.confirm_password:
+            raise ValueError("Passwords do not match")
         return self
 
 
-class VerifyOTPInput(BaseModel):
-    email: str | None = None
-    phone: str | None = None
-    code: str
+class LoginInput(BaseModel):
+    """Login by email or username + password."""
 
-    @model_validator(mode="after")
-    def require_email_or_phone(self):
-        if not self.email and not self.phone:
-            raise ValueError("At least one of email or phone is required")
-        return self
+    email_or_username: str
+    password: str
 
 
 class TokenResponse(BaseModel):
@@ -32,6 +53,6 @@ class TokenResponse(BaseModel):
 
 class UserResponse(BaseModel):
     id: int
-    name: str
-    email: str | None
-    phone: str | None
+    username: str
+    email: str
+    is_active: bool
